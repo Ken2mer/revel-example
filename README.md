@@ -11,9 +11,9 @@
 ### Create user
 
 ```zsh
-% curl -v -XPOST -F "name=example 1" localhost:9000/users
-% curl -v -XPOST -F "name=example 2" localhost:9000/users
-% curl -v -XPOST -F "name=example 3" localhost:9000/users
+% curl -X POST -H "Content-Type: application/json" -d '{"name":"example 1"}' localhost:9000/users
+% curl -X POST -H "Content-Type: application/json" -d '{"name":"example 2"}' localhost:9000/users
+% curl -X POST -H "Content-Type: application/json" -d '{"name":"example 3"}' localhost:9000/users
 ```
 
 ### Get users
@@ -22,17 +22,17 @@
 % curl -s http://localhost:9000/users | jq .
 [
   {
-    "UserId": 1,
-    "Name": "example 1"
+    "user_id": 1,
+    "name": "example 1"
   },
   {
-    "UserId": 2,
-    "Name": "example 2"
+    "user_id": 2,
+    "name": "example 2"
   },
   {
-    "UserId": 3,
-    "Name": "example 3"
-  }
+    "user_id": 3,
+    "name": "example 3"
+  },
 ]
 ```
 

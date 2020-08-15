@@ -3,8 +3,8 @@ package models
 import "fmt"
 
 type User struct {
-	UserId int
-	Name   string
+	UserId int    `json:"user_id"`
+	Name   string `json:"name"`
 }
 
 func (u *User) String() string {

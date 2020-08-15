@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"revel-example/app"
 	"revel-example/app/models"
@@ -16,7 +17,7 @@ type User struct {
 func (c User) Index() revel.Result {
 	rows, err := app.DB.Query("select * from users;")
 	if err != nil {
-		c.RenderJSON(err)
+		return c.RenderJSON(err)
 	}
 	defer rows.Close()
 
@@ -29,26 +30,27 @@ func (c User) Index() revel.Result {
 		users = append(users, user)
 	}
 
-	if err := rows.Err(); err != nil {
-		fmt.Println(err)
-	}
-
 	return c.RenderJSON(users)
 }
 
 func (c User) Create() revel.Result {
+	var user *models.User
+	if err := json.Unmarshal(c.Params.JSON, &user); err != nil {
+		return c.RenderJSON(err)
+	}
+
 	sql := "INSERT INTO users (name) VALUES ($1);"
 
-	result, err := app.DB.Exec(sql, c.Params.Form.Get("name"))
+	result, err := app.DB.Exec(sql, user.Name)
 	if err != nil {
-		c.RenderJSON(err)
+		return c.RenderJSON(err)
 	}
 	rows, err := result.RowsAffected()
 	if err != nil {
-		c.RenderJSON(err)
+		return c.RenderJSON(err)
 	}
 	if rows != 1 {
-		c.RenderJSON(fmt.Sprintf("expected to affect 1 row, affected %d", rows))
+		return c.RenderJSON(fmt.Sprintf("expected to affect 1 row, affected %d", rows))
 	}
 	return c.Redirect(routes.User.Index())
 }

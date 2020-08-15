@@ -19,14 +19,16 @@ var (
 )
 
 func InitDB() {
-	connstring := fmt.Sprintf("user=%s password='%s' dbname=%s sslmode=disable", "user", "password", "dbname")
+	connstring := os.Getenv("POSTGRES_URL")
+	if connstring == "" {
+		fmt.Println("WARNING: POSTGRES_URL is unset")
+	}
 
 	var err error
 	DB, err = sql.Open("postgres", connstring)
 	if err != nil {
 		fmt.Println("DB Error", err)
 	}
-	fmt.Println("DB Connected")
 }
 
 func init() {
